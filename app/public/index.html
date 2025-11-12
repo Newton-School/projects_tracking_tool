@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Krushn's Hacktoberfest Tracker</title>
+
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet" />
+
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+
+    <!-- <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 8px;
+      }
+
+      table {
+        background-color: white;
+        width: 100%;
+      }
+
+      .search-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-box {
+        position: relative;
+        max-width: 500px;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        outline: none;
+      }
+
+      .search-box input:focus {
+        border-color: #4a90e2;
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        max-height: 300px;
+        overflow-y: auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        margin-top: 4px;
+      }
+
+      .search-result-item {
+        padding: 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+      }
+
+      .search-result-item:hover {
+        background-color: #f0f7ff;
+      }
+
+      .search-result-item:last-child {
+        border-bottom: none;
+      }
+
+      .user-info {
+        font-size: 14px;
+        color: #666;
+        margin-top: 4px;
+      }
+
+      .selected-user {
+        margin-top: 15px;
+        padding: 15px;
+        background-color: #e8f4ff;
+        border-radius: 6px;
+        border-left: 4px solid #4a90e2;
+      }
+
+      .clear-button {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+        font-size: 14px;
+      }
+
+      .clear-button:hover {
+        background-color: #ee5a52;
+      }
+
+      .stats-table {
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        margin: 20px 0;
+      }
+    </style> -->
+  </head>
+  <body>
+    <div id="app">
+      <h1>Krushn's Hacktoberfest Tracker</h1>
+
+      <!-- Search Profile Section -->
+      <div class="search-container">
+        <h2>Search Profile by Author</h2>
+        <div class="search-box">
+          <input
+            type="text"
+            v-model="searchQuery"
+            @input="handleSearchInput"
+            @focus="showSearchResults = true"
+            placeholder="Search by username or full name..." />
+
+          <div
+            v-if="showSearchResults && searchResults.length > 0"
+            class="search-results">
+            <div
+              v-for="user in searchResults"
+              :key="user._id"
+              @click="selectUser(user)"
+              class="search-result-item">
+              <div>
+                <strong>{{ user.full_name }}</strong> (@{{ user.username }})
+              </div>
+              <div class="user-info">
+                {{ user.college?.name || 'No College' }} - {{ user.year || 'N/A'
+                }} | {{ user.role }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-if="showSearchResults && searchQuery && searchResults.length === 0"
+            class="search-results">
+            <div class="search-result-item">No users found</div>
+          </div>
+        </div>
+
+        <div v-if="selectedUser" class="selected-user">
+          <strong>Selected Profile:</strong> {{ selectedUser.full_name }} (@{{
+          selectedUser.username }})
+          <button @click="clearSelection" class="clear-button">
+            Clear Filter
+          </button>
+          <div v-if="userProfileStats" style="margin-top: 10px">
+            <strong>Stats:</strong>
+            Total PRs: {{ userProfileStats.totalPRs }} | Merged: {{
+            userProfileStats.mergedPRs }} | Open: {{ userProfileStats.openPRs }}
+            | Closed: {{ userProfileStats.closedPRs }}
+          </div>
+        </div>
+      </div>
+
+      <table v-if="statistics" class="stats-table">
+        <tr>
+          <td>Total PRs</td>
+          <td>{{ displayStatistics.totalPRs }}</td>
+        </tr>
+        <tr>
+          <td>Merged PRs</td>
+          <td>{{ displayStatistics.mergedPRs }}</td>
+        </tr>
+        <tr>
+          <td>Open PRs</td>
+          <td>{{ displayStatistics.openPRs }}</td>
+        </tr>
+        <tr>
+          <td>Closed PRs</td>
+          <td>{{ displayStatistics.closedPRs }}</td>
+        </tr>
+        <tr v-if="!selectedUser">
+          <td>Total Repositories</td>
+          <td>{{ statistics.totalRepositories }}</td>
+        </tr>
+        <tr v-if="!selectedUser">
+          <td>Red-Flagged Repositories</td>
+          <td>{{ statistics.redFlaggedRepositories }}</td>
+        </tr>
+        <tr v-if="!selectedUser">
+          <td>Total Users</td>
+          <td>{{ statistics.totalUsers }}</td>
+        </tr>
+        <tr v-if="!selectedUser">
+          <td>Total Colleges</td>
+          <td>{{ statistics.totalColleges }}</td>
+        </tr>
+        <tr v-if="!selectedUser">
+          <td>Total Owners</td>
+          <td>{{ statistics.totalOwners }}</td>
+        </tr>
+      </table>
+
+      <h2>
+        Pull Requests {{ selectedUser ? 'for ' + selectedUser.full_name : '' }}
+      </h2>
+      <table v-if="displayedPRs.length">
+        <thead>
+          <tr>
+            <td v-if="statistics" colspan="6">
+              Visible PRs: {{ displayedPRs.length }}
+              <span v-if="!selectedUser">
+                | Hidden PRs: {{ statistics.totalPRs - displayedPRs.length
+                }}</span
+              >
+            </td>
+          </tr>
+          <tr>
+            <th>Author</th>
+            <th>Owner</th>
+            <th>Repository</th>
+            <th>Status</th>
+            <th>Title</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="pr in displayedPRs" :key="pr._id">
+            <td>
+              <p>{{ pr.author.full_name }}</p>
+              <p>{{ pr.author.username }}</p>
+              <p>
+                {{ pr.author.college?.name }} - {{ pr.author.college?.year }}
+              </p>
+              <p>{{ pr.author.role }}</p>
+            </td>
+
+            <td>{{ pr.repository.owner.username }}</td>
+
+            <td>
+              {{ pr.repository.name }} Is Self Repo?
+              {{pr.repository.owner.username === pr.author.username ? 'Yes' :
+              'No'}}
+
+              <button @click="redFlagRepository(pr.repository._id)">
+                Mark Red Flag
+              </button>
+            </td>
+
+            <td>
+              <span v-if="pr.is_merged">Merged</span>
+              <span v-else-if="pr.is_open">Open</span>
+              <span v-else>Closed</span>
+            </td>
+
+            <td>{{ pr.title }}</td>
+
+            <td><a :href="pr.link" target="_blank">View PR</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="/main.js"></script>
+
+    <script>
+      /**
+      const statistics = {
+        totalPRs,
+        mergedPRs,
+        openPRs,
+        closedPRs,
+        totalRepositories,
+        redFlaggedRepositories,
+        totalUsers,
+        totalColleges,
+        totalOwners,
+      }
+      */
+
+      /** 
+      const PR = {
+        _id: '68e985090744826b0baffecb',
+        github_id: 3498445179,
+        title: 'Humra namm Utsav h',
+        body: null,
+        author: {
+          _id: '68e9800352e4adee99aebad8',
+          username: 'UtsavDoye20122005',
+          github_id: 71711535,
+          full_name: 'UTSAV DOYE',
+          college: {
+            _id: '68e9800352e4adee99aebad5',
+            name: 'NST SVYASA',
+            __v: 0,
+            createdAt: '2025-10-10T21:52:03.676Z',
+            updatedAt: '2025-10-10T21:52:03.676Z',
+          },
+          year: '1st Year',
+          role: 'student',
+          createdAt: '2025-10-10T21:52:03.694Z',
+          updatedAt: '2025-10-10T21:52:03.694Z',
+          __v: 0,
+        },
+        repository: {
+          _id: '68e985090744826b0baffec8',
+          github_id: 1072838275,
+          name: 'fork-pr-activity',
+          owner: {
+            _id: '68e985080744826b0baffec5',
+            github_id: 235483496,
+            name: null,
+            username: 'adarsh-inst',
+            type: 'User',
+            createdAt: '2025-10-10T22:13:28.851Z',
+            updatedAt: '2025-10-10T22:13:28.851Z',
+            __v: 0,
+          },
+          is_gosc: false,
+          is_redFlagged: false,
+          createdAt: '2025-10-10T22:13:29.357Z',
+          updatedAt: '2025-10-10T22:13:29.357Z',
+          __v: 0,
+        },
+        is_open: false,
+        is_merged: true,
+        is_redFlagged: false,
+        redFlag_reason: '',
+        redFlag_by: null,
+        redFlag_at: null,
+        createdAt: '2025-10-09T09:52:39.000Z',
+        updatedAt: '2025-10-10T22:36:04.092Z',
+        __v: 0,
+        link: 'https://github.com/adarsh-inst/fork-pr-activity/pull/40',
+      }
+      */
+    </script>
+  </body>
+</html>

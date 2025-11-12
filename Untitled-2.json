@@ -1,0 +1,25 @@
+{
+  "tech_stack": "Express, MongoDB, Astro, GitHub API, Supabase",
+  "feature_completion": 8,
+  "functionality": 8,
+  "ui_ux_interactivity": 7,
+  "code_quality": 6,
+  "error_handling": 7,
+  "best_practices": 7,
+  "tech_stack_depth": 8,
+  "github_usage": 5,
+  "uniqueness_innovation": 6,
+  "ai_generated_score": 7,
+  "ai_generated_label": "Possibly",
+  "total_score": 71,
+  "score_explanation": "feature_completion: prService.js implements PR fetching; functionality: server/index.js handles auth routes; ui_ux_interactivity: Leaderboard.jsx has state changes; code_quality: prService.js uses async/await; error_handling: try/catch in prService.js; best_practices: package.json has workspaces; tech_stack_depth: MongoDB and GitHub API integration; github_usage: no README found; uniqueness_innovation: userDetails.js implements college-based PR counting; ai_generated_score: code appears human-written",
+  "summary": "A functional PR tracking platform with GitHub integration and user authentication.",
+  "strengths": "Well-structured code in prService.js; effective use of async operations; organized folder structure in package.json",
+  "improvements": "Add more comprehensive error handling in server/index.js; improve frontend UI responsiveness in Leaderboard.jsx; include a README for better repo hygiene",
+  "needs_second_attempt": false
+}
+
+
+
+
+
