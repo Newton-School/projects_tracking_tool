@@ -1,4 +1,4 @@
-# Projects Tracking Tool# Krushn's PR Tracker
+# Projects Tracking Tool# PR Tracker
 
 
 
@@ -8,9 +8,9 @@ A comprehensive tool for tracking GitHub pull requests and student project submi
 
 ## 📋 Table of Contents1. Clone the repository.
 
-2. Navigate to `krushn-tracker` directory.
+2. Navigate to  directory.
 
-- [Features](#features)3. Create an `.env` file in the `krushn-tracker` directory with the following variables:
+- [Features](#features)3. Create an `.env` file in the  directory with the following variables:
 
 - [Tech Stack](#tech-stack)
 
@@ -24,7 +24,7 @@ A comprehensive tool for tracking GitHub pull requests and student project submi
 
 - [Usage](#usage)
 
-- [API Documentation](#api-documentation)4. Run `npm install` in the `krushn-tracker` directory.
+- [API Documentation](#api-documentation)4. Run `npm install` in the  directory.
 
 - [Contributing](#contributing)5. Start the server with `npm start`.
 
