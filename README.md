@@ -1,34 +1,28 @@
-# Projects Tracking Tool# NST(adypu) PR Tracker
+# Projects Tracking Tool
 
+A comprehensive tool for tracking GitHub pull requests and student project submissions. This application consists of a React frontend and a Node.js backend with MongoDB integration.
 
+## 📋 Table of Contents
 
-A comprehensive tool for tracking GitHub pull requests and student project submissions. This application consists of a React frontend and a Node.js backend with MongoDB integration.## Setup
-
-
-
-## 📋 Table of Contents1. Clone the repository.
-
-2. Navigate to  directory.
-
-- [Features](#features)3. Create an `.env` file in the  directory with the following variables:
+- [Features](#features)
 
 - [Tech Stack](#tech-stack)
 
-- [Project Structure](#project-structure)    ```env
+- [Project Structure](#project-structure) 
 
-- [Prerequisites](#prerequisites)    GITHUB_TOKEN=your_github_personal_access_token
+- [Prerequisites](#prerequisites)    
 
-- [Installation](#installation)    MONGO_URI=your_mongodb_connection_string
+- [Installation](#installation)    
 
-- [Configuration](#configuration)    ```
+- [Configuration](#configuration)
 
 - [Usage](#usage)
 
-- [API Documentation](#api-documentation)4. Run `npm install` in the  directory.
+- [API Documentation](#api-documentation)
 
-- [Contributing](#contributing)5. Start the server with `npm start`.
+- [Contributing](#contributing)
 
-- [License](#license)# projects_tracking_tool
+- [License](#license)
 
 
 ## ✨ Features
